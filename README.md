@@ -43,7 +43,7 @@ To run the container locally (mapping port 80 to your host):
 docker run -d -p 80:80 ginkgo
 ```
 
-Then, open your browser and navigate to `http://localhost` (or your host’s IP address) to access the GinkgoWhale web interface.
+Then, open your browser and navigate to `http://localhost/ginkgo` (or your host’s IP address) to access the GinkgoWhale web interface.
 
 ### Running the Container on a Server
 
