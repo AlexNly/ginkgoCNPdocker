@@ -24,7 +24,7 @@ include "bootstrap.php";
 // == Parse user query =========================================================
 // =============================================================================
 
-$query = explode("/", $_GET['q']);
+$query = explode("/", isset($_GET['q']) ? $_GET['q'] : '');
 
 // Extract page
 $GINKGO_PAGE = $query[0];
@@ -93,7 +93,7 @@ if($GINKGO_PAGE == "results" || $GINKGO_PAGE == "analyze-subset")
         }
     }   
 }
-$tmpBinMeth = split('_', $config['binMeth']);
+$tmpBinMeth = explode('_', $config['binMeth']);
 $binInfo    = $tmpBinMeth[0] . ' bins of ' . $tmpBinMeth[1]/1000 . 'kb size <small><small>(' . $tmpBinMeth[3] . '/' . $tmpBinMeth[2] . 'bp reads)</small></small>';
 $clusteringInfo = $config['clustMeth'] . ' linkage, ' . str_replace('euclidian','euclidean',$config['distMeth']) . ' distance';
 $segInfo    = 'normalized read counts';
@@ -797,7 +797,7 @@ if($GINKGO_PAGE == 'admin-search')
                                 <?php
                                     if(empty($config))
                                         $config['binMeth'] = 'variable_500000_101_bowtie';
-                                    $binMeth = split('_', $config['binMeth']);
+                                    $binMeth = explode('_', $config['binMeth']);
                                 ?>
                                 <td>
                                     <?php $selected = array(); $selected[$binMeth[0]] = ' selected'; ?>
