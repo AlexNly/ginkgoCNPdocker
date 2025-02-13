@@ -1,83 +1,147 @@
-Ginkgo
-=========
+Below is an updated README.md for your fork **GinkgoWhale**. It combines the original instructions with detailed guidance on how to build and run the Docker container—both locally and on a server—as well as how to enter an interactive shell for troubleshooting, installing additional software, or downloading reference genomes.
 
-#### Ginkgo is a cloud-based single-cell copy-number variation analysis tool.
-#### Launch Ginkgo: [qb.cshl.edu/ginkgo](http://qb.cshl.edu/ginkgo)
+---
 
-Usage
-=========
+# GinkgoWhale
 
-* Step 0: Upload .bed files
-* Step 1: Choose analysis parameters
-* Step 2: Compute Copy Number Profiles, and a Phylogenetic Tree
-* Step 3: Analyze Individual Cells
+**GinkgoWhale** is a fork of Ginkgo—a cloud-based single-cell copy-number variation analysis tool—packaged in a Docker container for easy deployment and troubleshooting.
 
+---
 
-Setup Ginkgo on your own server
-=========
+## Usage
 
-**Requirements:**
+GinkgoWhale provides a web-based interface with the following workflow:
+1. **Step 0:** Upload your `.bed` files.
+2. **Step 1:** Choose analysis parameters.
+3. **Step 2:** Compute Copy Number Profiles and a Phylogenetic Tree.
+4. **Step 3:** Analyze Individual Cells.
 
-- PHP >=5.2
-- R >= 3.0.0
-- R Packages:
-	- ctc
-	- DNAcopy
-	- inline
-	- gplots
-	- scales
-	- plyr
-	- ggplot2
-	- gridExtra
-	- fastcluster
-	- heatmap3
+---
 
-**WARNING** Version 3.0.0 (Mar 28, 2016) of gplots introduced a bug in heatmap.2 that makes it calculate dendrograms even when Rowv or Colv is set to FALSE so that Ginkgo will run for a very long time. The solution is to use an older version of gplots or use fixed version from: https://github.com/ChristophH/gplots. This can be installed using the commands below
+## Setup GinkgoWhale on Your Own Server Using Docker
 
-```
-remove.packages('gplots'); 
-library('devtools'); 
-install_github("ChristophH/gplots")
+### Requirements
+
+- Docker installed on your machine or server.
+- A system that supports Docker (Linux, macOS, Windows).
+
+### Building the Docker Image
+
+In the root directory of your **GinkgoWhale** fork (where the Dockerfile is located), run:
+
+```bash
+docker build -t ginkgo .
 ```
 
-	
+This command builds the Docker image and installs all required system libraries, R, and the necessary R packages (including our fixed version of **gplots** from GitHub).
 
-**Install Ginkgo:**
+### Running the Container Locally
 
-Type ```make``` in the ginkgo/ directory
+To run the container locally (mapping port 80 to your host):
 
-**Server Configuration:**
+```bash
+docker run -d -p 80:80 ginkgo
+```
 
-- /etc/php.ini
-	- ```upload_tmp_dir```: make sure this directory has write permission
-	- ```upload_max_filesize```: set to >2G since .bam files can be large
+Then, open your browser and navigate to `http://localhost` (or your host’s IP address) to access the GinkgoWhale web interface.
 
-- ginkgo/includes/fileupload/server/php/UploadHandler.php
-	- In constructor, on line 43 and 44:
-		- ```upload_dir = [FULL_PATH_TO_UPLOADS_DIR] . $_SESSION["user_id"] . '/'```
-		- ```upload_url = [FULL_URL_TO_UPLOADS_DIR]  . $_SESSION["user_id"] . '/'```
+### Running the Container on a Server
 
-- ginkgo/bootstrap.php
-	- Change ```DIR_ROOT```, ```DIR_UPLOADS``` and ```URL_ROOT```
+On a remote server:
+1. **Build the image** (as above).
+2. **Run the container** mapping the container port 80 to the server’s public port (e.g., 80 or another port if needed):
 
-- ginkgo/scripts/analyze.sh
-	- Change ```home``` variable to where the ginkgo/ folder is located
+   ```bash
+   docker run -d -p 80:80 ginkgo
+   ```
 
-- ginkgo/scripts/process.R
-	- Change ```main_dir``` variable to the folder where ginkgo/scripts is located
+3. Ensure your server’s firewall allows incoming traffic on the chosen port.
+4. Access the web interface by browsing to `http://<server_ip>`.
 
-- ginkgo/scripts/reclust.R
-	- Change ```main_dir``` variable to the folder where ginkgo/scripts is located
+---
 
-- ginkgo/scripts/analyze-subset.R
-	- Set the folder to where ginkgo/scripts is located
-	- Set the folder to where ginkgo/genomes is located (warning: test this carefully if your ginkgo/uploads folder is a symlink)
+## Advanced: Interactive Shell & Troubleshooting
 
-- Make sure the uploads directory has the correct write permissions
+Sometimes you may wish to enter the container interactively—for example, to install additional software, download reference genomes, or troubleshoot issues.
 
-**Download data files:**
+### Entering an Interactive Shell
 
-- Download binning data for hg19 at https://labshare.cshl.edu/shares/schatzlab/www-data/ginkgo/genomes/hg19.tgz
-	- untar into ginkgo/genomes/hg19 (which needs to be created)
+Run the container with an interactive shell by overriding the entrypoint:
 
-- Other genomes, including hg18, hg19, mm9, mm10, rheMac7, rheMac8, rn5 and dm3 can be found at http://labshare.cshl.edu/shares/schatzlab/www-data/ginkgo/genomes/
+```bash
+docker run -it --entrypoint /bin/bash ginkgo
+```
+
+This will drop you into a bash shell inside the container.
+
+### Installing Additional Software
+
+Once inside the shell, you can install new packages using `apt-get` or R commands. For example, to install a package via apt:
+
+```bash
+apt-get update && apt-get install -y <package-name>
+```
+
+Or, to install an R package interactively:
+
+```bash
+Rscript -e "install.packages('somePackage', repos='https://cloud.r-project.org')"
+```
+
+### Downloading the Reference Genome
+
+GinkgoWhale requires binning data (e.g., for hg19). To download and prepare the reference genome:
+
+1. Download the hg19 binning data:
+
+   ```bash
+   wget https://labshare.cshl.edu/shares/schatzlab/www-data/ginkgo/genomes/hg19.tgz
+   ```
+
+2. Create the target directory and extract the files:
+
+   ```bash
+   mkdir -p ginkgo/genomes/hg19
+   tar -xzvf hg19.tgz -C ginkgo/genomes/hg19
+   ```
+
+> **Note:** Ensure that the directory structure matches what GinkgoWhale expects.
+
+---
+
+## Configuration of the Server in the container
+
+After deployment, you may need to adjust configuration settings:
+
+- **PHP Configuration:**  
+  Edit `/etc/php.ini` to set:
+  - `upload_tmp_dir`: Ensure this directory is writable.
+  - `upload_max_filesize`: Set this to >2G (since .bam files can be large).
+
+- **Ginkgo Configuration Files:**  
+  Modify the following files within the GinkgoWhale source code:
+  - `ginkgo/includes/fileupload/server/php/UploadHandler.php`:  
+    Update lines 43 and 44 with your full path to the uploads directory.
+  - `ginkgo/bootstrap.php`:  
+    Change `DIR_ROOT`, `DIR_UPLOADS`, and `URL_ROOT` to suit your deployment.
+  - `ginkgo/scripts/analyze.sh`:  
+    Update the `home` variable to point to your GinkgoWhale folder.
+  - `ginkgo/scripts/process.R`, `ginkgo/scripts/reclust.R`, `ginkgo/scripts/analyze-subset.R`:  
+    Adjust the `main_dir` variables as necessary.
+- **Uploads Directory:**  
+  Ensure the `ginkgo/uploads` directory has correct write permissions.
+
+- **Genomes Directory:**  
+  Create the directory (e.g., `ginkgo/genomes/hg19`) and extract the downloaded binning data there.
+
+---
+
+## Summary
+
+- **GinkgoWhale** is deployed via Docker and can run locally or on a server.
+- **Building:** Use `docker build -t ginkgo .`
+- **Running:** Use `docker run -d -p 80:80 ginkgo`
+- **Interactive Shell:** Use `docker run -it --entrypoint /bin/bash ginkgo`
+- **Customizations:** Update PHP and Ginkgo configuration files and download necessary reference data.
+
+This README now serves as a complete guide for setting up, running, and troubleshooting your GinkgoWhale Docker deployment.
