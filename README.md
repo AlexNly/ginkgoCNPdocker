@@ -1,8 +1,5 @@
-Below is an updated README.md for your fork **GinkgoWhale**. It combines the original instructions with detailed guidance on how to build and run the Docker container—both locally and on a server—as well as how to enter an interactive shell for troubleshooting, installing additional software, or downloading reference genomes.
 
----
-
-# GinkgoWhale
+# GinkgoWhale (currently not functional)
 
 **GinkgoWhale** is a fork of Ginkgo—a cloud-based single-cell copy-number variation analysis tool—packaged in a Docker container for easy deployment and troubleshooting.
 
