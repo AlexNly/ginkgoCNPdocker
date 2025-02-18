@@ -24,7 +24,7 @@ include "bootstrap.php";
 // == Parse user query =========================================================
 // =============================================================================
 
-$query = explode("/", isset($_GET['q']) ? $_GET['q'] : '');
+$query = explode("/", $_GET['q']);
 
 // Extract page
 $GINKGO_PAGE = $query[0];
@@ -67,6 +67,8 @@ if($GINKGO_PAGE == "results")
 
 $_SESSION["user_id"] = $GINKGO_USER_ID;
 
+
+
 // Define user directories
 $userDir = DIR_UPLOADS . '/' . $GINKGO_USER_ID;
 $userUrl = URL_ROOT . '/uploads/' . $GINKGO_USER_ID;
@@ -75,6 +77,10 @@ $permalink = URL_ROOT . '?q=results/' . $GINKGO_USER_ID;
 if(file_exists($descFile = $userDir . '/description.txt'))
     setcookie("ginkgo[$GINKGO_USER_ID]", file_get_contents($descFile), time()+36000000);
 
+ // Create the user directory if it doesn't exist
+if (!file_exists($userDir)) {
+    mkdir($userDir, 0755, true);
+}
 
 // =============================================================================
 // == Template configuration ===================================================
@@ -84,7 +90,9 @@ if(file_exists($descFile = $userDir . '/description.txt'))
 if($GINKGO_PAGE == "results" || $GINKGO_PAGE == "analyze-subset")
 {
     $configFile = $userDir . "/config";
+    echo "<script>console.log('Debug Objects: If block1 ' );</script>";
     if(file_exists($configFile)) {
+        echo "<script>console.log('Debug Objects: If block2 ' );</script>";
         $f = file($configFile);
         $config = array();
         foreach($f as $index => $val) {
@@ -93,7 +101,7 @@ if($GINKGO_PAGE == "results" || $GINKGO_PAGE == "analyze-subset")
         }
     }   
 }
-$tmpBinMeth = explode('_', $config['binMeth']);
+$tmpBinMeth = preg_split('_', $config['binMeth']);
 $binInfo    = $tmpBinMeth[0] . ' bins of ' . $tmpBinMeth[1]/1000 . 'kb size <small><small>(' . $tmpBinMeth[3] . '/' . $tmpBinMeth[2] . 'bp reads)</small></small>';
 $clusteringInfo = $config['clustMeth'] . ' linkage, ' . str_replace('euclidian','euclidean',$config['distMeth']) . ' distance';
 $segInfo    = 'normalized read counts';
@@ -797,7 +805,7 @@ if($GINKGO_PAGE == 'admin-search')
                                 <?php
                                     if(empty($config))
                                         $config['binMeth'] = 'variable_500000_101_bowtie';
-                                    $binMeth = explode('_', $config['binMeth']);
+                                    $binMeth = preg_split('_', $config['binMeth']);
                                 ?>
                                 <td>
                                     <?php $selected = array(); $selected[$binMeth[0]] = ' selected'; ?>
@@ -1625,7 +1633,7 @@ if($GINKGO_PAGE == 'admin-search')
                         '   </tr> ' + '\n' +
                         '   </thead>\n';
                 table += '<tbody>';
-                allLines = qaFile.split("\n");
+                allLines = qaFile.preg_split("\n");
 
                 omg = [[], [], []];
                 for(var line in allLines)
@@ -1634,7 +1642,7 @@ if($GINKGO_PAGE == 'admin-search')
                     if(lineNb == 1)
                         continue;
 
-                    arrLine = allLines[line].split("\t");
+                    arrLine = allLines[line].preg_split("\t");
                     if(arrLine.length < 11)
                         continue;
                     cell  = arrLine[0].replace(/"/g, '');
@@ -1720,9 +1728,9 @@ if($GINKGO_PAGE == 'admin-search')
                 // Plot CNV profile of current cell
                 $.get('genomes/<?php echo $config["chosen_genome"] . "/" . ($config["rmpseudoautosomal"] == "1" ? "pseudoautosomal" : "original"); ?>/bounds_<?php echo $config["binMeth"]; ?>', function(data)
                 {
-                    chromBoundaries = data.split('\n');
+                    chromBoundaries = data.preg_split('\n');
                     for(i=0; i<chromBoundaries.length; i++) {
-                        tmp = chromBoundaries[i].split('\t');
+                        tmp = chromBoundaries[i].preg_split('\t');
                         chromBoundaries[i] = chromBoundaries[i].replace(tmp[0]+'\t', '')
                     }
                     loadCellProfile('cnv');
@@ -1840,10 +1848,10 @@ if($GINKGO_PAGE == 'admin-search')
             // -- Load file that specifies bin # <--> chr:pos
             $.get('genomes/<?php echo $config["chosen_genome"] . "/" . ($config["rmpseudoautosomal"] == "1" ? "pseudoautosomal" : "original"); ?>/<?php echo $config["binMeth"]; ?>?uniq=' + Math.round(Math.random()*10000), function(data){
 
-                binToPos = data.split('\n');
+                binToPos = data.preg_split('\n');
                 // Note i=1 b/c skipping header
                 for(i=1; i<binToPos.length; i++) {
-                    tmp = binToPos[i].split('\t');
+                    tmp = binToPos[i].preg_split('\t');
                     binToPos[i] = tmp
                 }
 
@@ -1938,7 +1946,7 @@ if($GINKGO_PAGE == 'admin-search')
 
         // 
         var toArray = function(data) {
-            var lines = data.split("\n");
+            var lines = data.preg_split("\n");
             var arry = [];
             for (var idx = 0; idx < lines.length; idx++)
             {
@@ -1946,7 +1954,7 @@ if($GINKGO_PAGE == 'admin-search')
                 // Oftentimes there's a blank line at the end. Ignore it.
                 if (line.length == 0)
                     continue;
-                var row = line.split(",");
+                var row = line.preg_split(",");
                 // Special processing for every row except the header.
                 row[0] = parseFloat(row[0]);
                 row[1] = parseFloat(row[1]);
