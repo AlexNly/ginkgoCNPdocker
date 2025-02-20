@@ -1,0 +1,39 @@
+# Docker files
+.DS_Store
+*.swp
+*.swo
+.env
+.env.*
+!.env.example
+
+# Docker build files
+Dockerfile.*
+docker-compose*.yml
+!docker-compose.yml
+.docker/
+
+# Build output
+*.log
+dist/
+build/
+tmp/
+.cache/
+
+# Node modules if using Node.js in Docker
+node_modules/
+
+# macOS system files
+.DS_Store?
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# VS Code
+.vscode/
+.settings/
+*.code-workspace
+
+/genomes/hg19
