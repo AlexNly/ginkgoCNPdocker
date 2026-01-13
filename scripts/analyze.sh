@@ -8,7 +8,7 @@
 # -- Variables
 # ------------------------------------------------------------------------------
 
-home=/local1/work/ginkgo
+home=/var/www/html/ginkgo
 dir=${home}/uploads/${1}
 source ${dir}/config
 distMet=$distMeth

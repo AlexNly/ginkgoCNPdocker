@@ -12,7 +12,7 @@
 minPloidy   = 1.5
 maxPloidy   = 6
 minBinWidth = 5
-main_dir="/local1/work/ginkgo/scripts"
+main_dir="/var/www/html/ginkgo/scripts"
 
 if (!file.exists(main_dir)) {
   # Get main_dir from full commandArgs

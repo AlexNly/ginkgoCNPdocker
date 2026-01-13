@@ -15,7 +15,7 @@ else
   exit
 fi
 
-cd /local1/work/ginkgo-uploads
+cd /var/www/html/ginkgo/uploads
 
 if [ ! -r ~/list.clean ]
 then

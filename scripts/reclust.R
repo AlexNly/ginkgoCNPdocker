@@ -2,7 +2,7 @@
 
 args<-commandArgs(TRUE)
 
-main_dir="/local1/work/ginkgo/scripts"
+main_dir="/var/www/html/ginkgo/scripts"
 
 genome <- args[[1]]
 user_dir <- args[[2]]
