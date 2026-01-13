@@ -10,7 +10,10 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-session_start();
+// Session should already be started by index.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class UploadHandler
 {
@@ -37,11 +40,12 @@ class UploadHandler
     );
 
     function __construct($options = null, $initialize = true, $error_messages = null) {
+        $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : '';
         $this->options = array(
     		'ginkgo_zip' => false,
             'script_url' => $this->get_full_url().'/',
-            'upload_dir' => '/local1/work/ginkgo/uploads/' . $_SESSION["user_id"] . '/',
-            'upload_url' => 'http://qb.cshl.edu/ginkgo/uploads/' . $_SESSION["user_id"] . '/',
+            'upload_dir' => '/var/www/html/ginkgo/uploads/' . $user_id . '/',
+            'upload_url' => 'http://localhost/ginkgo/uploads/' . $user_id . '/',
             'user_dirs' => false,
             'mkdir_mode' => 0755,
             'param_name' => 'files',
@@ -520,7 +524,7 @@ class UploadHandler
             $name = $this->upcount_name($name);
         }
         // Keep an existing filename if this is part of a chunked upload:
-        $uploaded_bytes = $this->fix_integer_overflow(intval($content_range[1]));
+        $uploaded_bytes = $this->fix_integer_overflow(intval(isset($content_range[1]) ? $content_range[1] : 0));
         while(is_file($this->get_upload_path($name))) {
             if ($uploaded_bytes === $this->get_file_size(
                     $this->get_upload_path($name))) {

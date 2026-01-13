@@ -16,6 +16,13 @@
 
 set_time_limit(0);
 error_reporting(E_ALL | E_STRICT);
+
+// Set session user_id from POST/GET if not already set
+session_start();
+if (isset($_REQUEST['user_id']) && !empty($_REQUEST['user_id'])) {
+    $_SESSION['user_id'] = $_REQUEST['user_id'];
+}
+
 require('UploadHandler.php');
 
 #echo ini_get("upload_tmp_dir") . "|";
