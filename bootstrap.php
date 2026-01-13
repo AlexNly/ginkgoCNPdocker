@@ -20,7 +20,8 @@ $GINKGO_MIN_NB_CELLS = 3;
 // == Misc. configuration ======================================================
 // =============================================================================
 set_time_limit(0);
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+ini_set('display_errors', 0);
 session_start();
 
 

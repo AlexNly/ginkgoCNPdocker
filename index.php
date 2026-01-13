@@ -87,21 +87,29 @@ if (!file_exists($userDir)) {
 // =============================================================================
 
 // -- Panel for info -----------------------------------------------------------
+// Initialize config with default values to prevent undefined variable errors
+$config = array(
+    'binMeth' => 'variable_100000_150_bwa',
+    'clustMeth' => 'ward.D2',
+    'distMeth' => 'euclidean',
+    'segMeth' => '1',
+    'chosen_genome' => 'hg19'
+);
+
 if($GINKGO_PAGE == "results" || $GINKGO_PAGE == "analyze-subset")
 {
     $configFile = $userDir . "/config";
-    echo "<script>console.log('Debug Objects: If block1 ' );</script>";
     if(file_exists($configFile)) {
-        echo "<script>console.log('Debug Objects: If block2 ' );</script>";
         $f = file($configFile);
-        $config = array();
         foreach($f as $index => $val) {
             $values = explode("=", $val, 2);
-            $config[$values[0]] = str_replace("'", "", trim($values[1]));
+            if(count($values) == 2) {
+                $config[$values[0]] = str_replace("'", "", trim($values[1]));
+            }
         }
-    }   
+    }
 }
-$tmpBinMeth = preg_split('_', $config['binMeth']);
+$tmpBinMeth = preg_split('/_/', $config['binMeth']);
 $binInfo    = $tmpBinMeth[0] . ' bins of ' . $tmpBinMeth[1]/1000 . 'kb size <small><small>(' . $tmpBinMeth[3] . '/' . $tmpBinMeth[2] . 'bp reads)</small></small>';
 $clusteringInfo = $config['clustMeth'] . ' linkage, ' . str_replace('euclidian','euclidean',$config['distMeth']) . ' distance';
 $segInfo    = 'normalized read counts';

@@ -1,7 +1,27 @@
+# GinkgoWhale
 
-# GinkgoWhale (currently not functional)
+**GinkgoWhale** is a fork of [Ginkgo](https://github.com/robertaboukhalil/ginkgo)—a cloud-based single-cell copy-number variation analysis tool—packaged in a Docker container for easy deployment and troubleshooting.
 
-**GinkgoWhale** is a fork of Ginkgo—a cloud-based single-cell copy-number variation analysis tool—packaged in a Docker container for easy deployment and troubleshooting.
+---
+
+## Current Status (January 2026)
+
+**Web Interface: Working** - The Docker container builds and runs successfully.
+
+**Analysis: Blocked** - The CSHL genome data servers are down, preventing analysis from running.
+
+### Known Issue: Genome Data Unavailable
+
+The hg19 genome binning data required for CNV analysis is hosted on Cold Spring Harbor Laboratory servers that are currently unavailable:
+- `https://labshare.cshl.edu/shares/schatzlab/www-data/ginkgo/genomes/hg19.tgz` → 404 Not Found
+- `http://qb.cshl.edu/ginkgo/uploads/hg19.original.tar.gz` → 503 Service Unavailable
+
+This is a [known issue on the upstream repository](https://github.com/robertaboukhalil/ginkgo/issues/50) (opened October 2025, unresolved).
+
+**Workarounds:**
+- Wait for CSHL servers to come back online
+- Contact CSHL/Schatz Lab for alternative data access
+- Use alternative CNV tools: [SCOPE](https://github.com/WangLabCornell/SCOPE), [copyKAT](https://github.com/navinlabcode/copykat), [inferCNV](https://github.com/broadinstitute/inferCNV)
 
 ---
 

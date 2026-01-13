@@ -42,9 +42,9 @@ RUN make
 
 # ---- Server Configuration: Update configuration files as per README ----
 
-# 1. Update UploadHandler.php: Replace placeholders with full paths.
-RUN sed -i "43s#\\[FULL_PATH_TO_UPLOADS_DIR\\]#/var/www/html/ginkgo/uploads#g" includes/fileupload/server/php/UploadHandler.php && \
-    sed -i "44s#\\[FULL_URL_TO_UPLOADS_DIR\\]#http://localhost/ginkgo/uploads#g" includes/fileupload/server/php/UploadHandler.php
+# 1. Update UploadHandler.php: Replace hardcoded paths with Docker paths.
+RUN sed -i "s#/local1/work/ginkgo#/var/www/html/ginkgo#g" includes/fileupload/server/php/UploadHandler.php && \
+    sed -i "s#http://qb.cshl.edu/ginkgo#http://localhost/ginkgo#g" includes/fileupload/server/php/UploadHandler.php
 
 # 2. Update bootstrap.php: Set DIR_ROOT, DIR_UPLOADS, and URL_ROOT.
 # Update bootstrap.php: Set DIR_ROOT, DIR_UPLOADS, and URL_ROOT (include semicolons)
