@@ -5,7 +5,7 @@
 // =============================================================================
 
 // Directories
-define('DIR_ROOT', '/local1/work/ginkgo');
+define('DIR_ROOT', '/var/www/html/ginkgo');
 define('DIR_UPLOADS', DIR_ROOT . '/uploads');
 
 // URLs
@@ -59,7 +59,7 @@ function getMyFiles($userID, $ext = 'bed')
 }
 
 //
-function sanitize(&$item, $key)
+function sanitize(&$item, $key = null)
 {
 	$item = escapeshellarg($item);
 }
