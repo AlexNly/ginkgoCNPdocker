@@ -1641,7 +1641,7 @@ if($GINKGO_PAGE == 'admin-search')
                         '   </tr> ' + '\n' +
                         '   </thead>\n';
                 table += '<tbody>';
-                allLines = qaFile.preg_split("\n");
+                allLines = qaFile.split("\n");
 
                 omg = [[], [], []];
                 for(var line in allLines)
@@ -1650,7 +1650,7 @@ if($GINKGO_PAGE == 'admin-search')
                     if(lineNb == 1)
                         continue;
 
-                    arrLine = allLines[line].preg_split("\t");
+                    arrLine = allLines[line].split("\t");
                     if(arrLine.length < 11)
                         continue;
                     cell  = arrLine[0].replace(/"/g, '');
@@ -1736,9 +1736,9 @@ if($GINKGO_PAGE == 'admin-search')
                 // Plot CNV profile of current cell
                 $.get('genomes/<?php echo $config["chosen_genome"] . "/" . ($config["rmpseudoautosomal"] == "1" ? "pseudoautosomal" : "original"); ?>/bounds_<?php echo $config["binMeth"]; ?>', function(data)
                 {
-                    chromBoundaries = data.preg_split('\n');
+                    chromBoundaries = data.split('\n');
                     for(i=0; i<chromBoundaries.length; i++) {
-                        tmp = chromBoundaries[i].preg_split('\t');
+                        tmp = chromBoundaries[i].split('\t');
                         chromBoundaries[i] = chromBoundaries[i].replace(tmp[0]+'\t', '')
                     }
                     loadCellProfile('cnv');
@@ -1856,10 +1856,10 @@ if($GINKGO_PAGE == 'admin-search')
             // -- Load file that specifies bin # <--> chr:pos
             $.get('genomes/<?php echo $config["chosen_genome"] . "/" . ($config["rmpseudoautosomal"] == "1" ? "pseudoautosomal" : "original"); ?>/<?php echo $config["binMeth"]; ?>?uniq=' + Math.round(Math.random()*10000), function(data){
 
-                binToPos = data.preg_split('\n');
+                binToPos = data.split('\n');
                 // Note i=1 b/c skipping header
                 for(i=1; i<binToPos.length; i++) {
-                    tmp = binToPos[i].preg_split('\t');
+                    tmp = binToPos[i].split('\t');
                     binToPos[i] = tmp
                 }
 
@@ -1954,7 +1954,7 @@ if($GINKGO_PAGE == 'admin-search')
 
         // 
         var toArray = function(data) {
-            var lines = data.preg_split("\n");
+            var lines = data.split("\n");
             var arry = [];
             for (var idx = 0; idx < lines.length; idx++)
             {
@@ -1962,7 +1962,7 @@ if($GINKGO_PAGE == 'admin-search')
                 // Oftentimes there's a blank line at the end. Ignore it.
                 if (line.length == 0)
                     continue;
-                var row = line.preg_split(",");
+                var row = line.split(",");
                 // Special processing for every row except the header.
                 row[0] = parseFloat(row[0]);
                 row[1] = parseFloat(row[1]);
