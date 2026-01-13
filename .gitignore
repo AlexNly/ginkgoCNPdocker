@@ -36,4 +36,6 @@ Icon
 .settings/
 *.code-workspace
 
-/genomes/hg19
+# Keep hg19 binning data but ignore FASTA files
+/genomes/hg19/*.fa
+/genomes/hg19/*.fa.gz

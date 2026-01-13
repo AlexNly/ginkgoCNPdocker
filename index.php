@@ -89,7 +89,7 @@ if (!file_exists($userDir)) {
 // -- Panel for info -----------------------------------------------------------
 // Initialize config with default values to prevent undefined variable errors
 $config = array(
-    'binMeth' => 'variable_100000_150_bwa',
+    'binMeth' => 'fixed_500000',
     'clustMeth' => 'ward.D2',
     'distMeth' => 'euclidean',
     'segMeth' => '1',
@@ -812,8 +812,8 @@ if($GINKGO_PAGE == 'admin-search')
                                 <td>General Binning Options</td>
                                 <?php
                                     if(empty($config))
-                                        $config['binMeth'] = 'variable_500000_101_bowtie';
-                                    $binMeth = preg_split('_', $config['binMeth']);
+                                        $config['binMeth'] = 'fixed_500000';
+                                    $binMeth = preg_split('/_/', $config['binMeth']);
                                 ?>
                                 <td>
                                     <?php $selected = array(); $selected[$binMeth[0]] = ' selected'; ?>
