@@ -255,7 +255,7 @@ if(isset($_POST['analyze']))
         foreach($f as $index => $val)
         {
             $values = explode("=", $val, 2);
-            $oldParams[$values[0]] = str_replace("", "", trim($values[1]));
+            $oldParams[$values[0]] = str_replace("'", "", trim($values[1]));
         }
 
         // Defaults for old analysis (do nothing)
